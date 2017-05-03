@@ -1,79 +1,84 @@
+package analysis;
+
+import metric.Metric;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-class ListAnalysis<E> {
+public class ListAnalysis<E> {
 
     private List<E> list;
 
-    private String getComplexity;
-    private String addComplexity;
-    private String containsComplexity;
-    private String removeComplexity;
+    private Metric metric;
 
-    String getBigO() {
-        return "ArrayList::get - " + getComplexity + '\n' +
-                "ArrayList::add - " + addComplexity + '\n' +
-                "ArrayList::contains - " + containsComplexity + '\n' +
-                "ArrayList::remove - " + removeComplexity;
+    private ListAnalysis() {
     }
-
-    private ListAnalysis() {}
 
     public static <E> ListAnalysis<E> getArrayListAnalysis() {
         ListAnalysis<E> listAnalysis = new ListAnalysis<>();
         listAnalysis.list = new ArrayList<>();
-        listAnalysis.getComplexity = "O(1)";
-        listAnalysis.addComplexity = "O(1)";
-        listAnalysis.containsComplexity = "O(n)";
-        listAnalysis.removeComplexity = "O(n)";
+        listAnalysis.metric = new Metric("ArrayListMetric");
         return listAnalysis;
     }
 
     public static <E> ListAnalysis<E> getLinkedListAnalysis() {
         ListAnalysis<E> listAnalysis = new ListAnalysis<>();
         listAnalysis.list = new LinkedList<>();
-        listAnalysis.getComplexity = "O(n)";
-        listAnalysis.addComplexity = "O(1)";
-        listAnalysis.containsComplexity = "O(n)";
-        listAnalysis.removeComplexity = "O(1)";
+        listAnalysis.metric = new Metric("LinkedListMetric");
         return listAnalysis;
     }
 
     public static <E> ListAnalysis<E> getCopyOnWriteArrayListAnalysis() {
         ListAnalysis<E> listAnalysis = new ListAnalysis<>();
         listAnalysis.list = new CopyOnWriteArrayList<>();
-        listAnalysis.getComplexity = "O(1)";
-        listAnalysis.addComplexity = "O(n)";
-        listAnalysis.containsComplexity = "O(n)";
-        listAnalysis.removeComplexity = "O(n)";
+        listAnalysis.metric = new Metric("CopyOnWriteArrayList");
         return listAnalysis;
     }
 
-    long runInsert(Collection<E> objectsToInsert) {
+    private long runPopulate(List<E> objectsToInsert) {
         long startTime = System.nanoTime();
         list.addAll(objectsToInsert);
         return System.nanoTime() - startTime;
     }
 
-    public long runGet() {
-        int targetIndex = (int)Math.random() % list.size();
+    private long runGet(int targetIndex) {
         long startTime = System.nanoTime();
         list.get(targetIndex);
         return System.nanoTime() - startTime;
     }
 
-    public long runContains(E target) {
+    private long runContains(E target) {
         long startTime = System.nanoTime();
         list.contains(target);
         return System.nanoTime() - startTime;
     }
 
-    public long runRemove(E target) {
+    private long runRemove(E target) {
         long startTime = System.nanoTime();
         list.remove(target);
         return System.nanoTime() - startTime;
+    }
+
+    private long runAdd(E target) {
+        long startTime = System.nanoTime();
+        list.add(target);
+        return System.nanoTime() - startTime;
+    }
+
+    public Metric runAnalysis(List<E> list) {
+        int randomIndex = (int) (Math.random() * list.size());
+
+        metric.setPopulateTime(runPopulate(list));
+        metric.setGetTime(runGet(randomIndex));
+
+        E targetObject = this.list.get(randomIndex);
+
+        metric.setContainsTime(runContains(targetObject));
+        metric.setRemoveTime(runRemove(targetObject));
+        metric.setAddTime(runAdd(targetObject));
+
+        return metric;
     }
 }
