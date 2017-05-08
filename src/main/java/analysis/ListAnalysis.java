@@ -1,6 +1,6 @@
 package analysis;
 
-import metric.Metric;
+import metric.ListMetric;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,36 +11,33 @@ public class ListAnalysis<E> {
 
     private List<E> list;
 
-    private Metric metric;
+    private ListMetric metric;
 
-    private ListAnalysis() {
-    }
+    private ListAnalysis() {}
 
     public static <E> ListAnalysis<E> getArrayListAnalysis() {
         ListAnalysis<E> listAnalysis = new ListAnalysis<>();
         listAnalysis.list = new ArrayList<>();
-        listAnalysis.metric = new Metric("ArrayListMetric");
+        listAnalysis.metric = new ListMetric("ArrayListMetric");
         return listAnalysis;
     }
 
     public static <E> ListAnalysis<E> getLinkedListAnalysis() {
         ListAnalysis<E> listAnalysis = new ListAnalysis<>();
         listAnalysis.list = new LinkedList<>();
-        listAnalysis.metric = new Metric("LinkedListMetric");
+        listAnalysis.metric = new ListMetric("LinkedListMetric");
         return listAnalysis;
     }
 
     public static <E> ListAnalysis<E> getCopyOnWriteArrayListAnalysis() {
         ListAnalysis<E> listAnalysis = new ListAnalysis<>();
         listAnalysis.list = new CopyOnWriteArrayList<>();
-        listAnalysis.metric = new Metric("CopyOnWriteArrayList");
+        listAnalysis.metric = new ListMetric("CopyOnWriteArrayList");
         return listAnalysis;
     }
 
-    private long runPopulate(List<E> objectsToInsert) {
-        long startTime = System.nanoTime();
+    private void runPopulate(List<E> objectsToInsert) {
         list.addAll(objectsToInsert);
-        return System.nanoTime() - startTime;
     }
 
     private long runGet(int targetIndex) {
@@ -67,10 +64,10 @@ public class ListAnalysis<E> {
         return System.nanoTime() - startTime;
     }
 
-    public Metric runAnalysis(List<E> list) {
+    public ListMetric runAnalysis(List<E> list) {
         int randomIndex = (int) (Math.random() * list.size());
 
-        metric.setPopulateTime(runPopulate(list));
+        runPopulate(list);
         metric.setGetTime(runGet(randomIndex));
 
         E targetObject = this.list.get(randomIndex);

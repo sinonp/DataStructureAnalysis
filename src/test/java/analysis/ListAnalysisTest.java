@@ -11,15 +11,15 @@ import static org.junit.Assert.assertTrue;
 
 public class ListAnalysisTest {
 
-    private List<String> populatedCollection;
+    private List<Integer> populatedIntegerCollection;
 
     @Before
     public void setUp() {
-        populatedCollection = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) populatedCollection.add("String");
-        populatedCollection.add("String");
+        populatedIntegerCollection = new ArrayList<>();
+        for (int i = 0; i < 1000000; i++) populatedIntegerCollection.add(i);
     }
 
+    //TODO: Expand these test cases.
     @Test
     public void getArrayListAnalysis() {
         assertTrue(ListAnalysis.getArrayListAnalysis() != null);
@@ -37,8 +37,8 @@ public class ListAnalysisTest {
 
     @Test
     public void whenCalledProduceMetric() {
-        ListAnalysis<String> arrayListAnalysis = ListAnalysis.getArrayListAnalysis();
-        Metric metric = arrayListAnalysis.runAnalysis(populatedCollection);
+        ListAnalysis<Integer> arrayListAnalysis = ListAnalysis.getArrayListAnalysis();
+        Metric metric = arrayListAnalysis.runAnalysis(populatedIntegerCollection);
         assertTrue("Should produce a metric!", metric != null);
     }
 }
