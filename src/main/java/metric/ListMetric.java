@@ -76,11 +76,8 @@ public class ListMetric implements Metric {
 
         ListMetric metric = (ListMetric) o;
 
-        if (getTime != metric.getTime) return false;
-        if (addTime != metric.addTime) return false;
-        if (containsTime != metric.containsTime) return false;
-        if (removeTime != metric.removeTime) return false;
-        return metricName.equals(metric.metricName);
+        return getTime == metric.getTime && addTime == metric.addTime && containsTime == metric.containsTime
+                && removeTime == metric.removeTime && metricName.equals(metric.metricName);
     }
 
     @Override

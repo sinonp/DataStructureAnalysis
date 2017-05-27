@@ -30,13 +30,6 @@ public class SetAnalysis<E> implements Analysis<E> {
         return setAnalysis;
     }
 
-    //TODO: Officially decide not to use EnumSet
-//    public static <E> SetAnalysis<E> getEnumSetAnalysis() {
-//        SetAnalysis<E> setAnalysis = new SetAnalysis<>();
-//        setAnalysis.metric = new SetMetric("EnumSetMetric");
-//        setAnalysis.set = new EnumSet<>();
-//        return setAnalysis;
-//    }
 
     public static <E> SetAnalysis<E> getTreeSetAnalysis() {
         SetAnalysis<E> setAnalysis = new SetAnalysis<>();
